@@ -81,7 +81,7 @@
   const getContactById = computed(() => {
     return contactStore.getContactById(props.contactId);
   });
-  console.log(getContactById.value);
+
   const getContactByPhone = computed(() => {
     return contactStore.getContactByPhone(phoneNumber.value);
   });

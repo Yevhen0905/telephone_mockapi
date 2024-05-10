@@ -1,55 +1,65 @@
 <template>
   <div class="contact_list">
-    <div v-if="contacts.length" class="wrapper_contact">
-      <h1 class="contact_title">Contact List</h1>
-      <div class="contact_action">
-        <div class="contact_input">
-          <label class="contact_label">Search</label>
-          <input
-            class="input"
-            type="text"
-            placeholder="search by name or telephone..."
-            v-model="search"
-          />
-        </div>
-        <div class="contact_input">
-          <label class="contact_label">Sorting</label>
-          <select class="input select" v-model="sortOrder">
-            <option
-              class="select_option"
-              v-for="option in sortOptions"
-              :key="option"
-              :value="option"
-            >
-              {{ option }}
-            </option>
-          </select>
-        </div>
+    <h1 class="contact_title">Contact List</h1>
+    <div class="contact_action">
+      <div class="contact_input">
+        <label class="contact_label">Search</label>
+        <input
+          class="input"
+          type="text"
+          placeholder="search by name or telephone..."
+          v-model="search"
+        />
       </div>
-      <div v-if="contacts.length > 0">
+      <div class="contact_input">
+        <label class="contact_label">Sorting</label>
+        <select class="input select" v-model="sortOrder">
+          <option
+            class="select_option"
+            v-for="option in sortOptions"
+            :key="option"
+            :value="option"
+          >
+            {{ option }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div v-if="filteredContacts.length" class="wrapper_contact">
+      <div v-if="currentSortList.length">
         <ContactCard
-          v-for="contact in currentSortList"
+          v-for="contact in paginatedContacts"
           :key="contact.id"
           :contact="contact"
         />
+        <Pagination
+          v-show="totalPages > 1"
+          :totalPages="totalPages"
+          :currentPage="currentPage"
+          @pageChange="handlePageChange"
+        />
       </div>
-      <div v-else class="no_contact">No contacts found.</div>
+      <div v-else class="no_contact">
+        <p class="no_contact_text">
+          No contacts. Click the Add contact button above to add one.
+        </p>
+      </div>
     </div>
-    <div v-else class="no_contact">
-      <p class="no_contact_text">
-        No contacts. Click the Add contact button above to add one.
-      </p>
-    </div>
+    <div v-else class="no_contact">No contacts found</div>
   </div>
 </template>
 
 <script setup>
   import ContactCard from '../components/ContactCard.vue';
+  import Pagination from '../components/Pagination.vue';
 
-  import {ref, computed} from 'vue';
+  import {ref, computed, watch} from 'vue';
   import {useContactsStore} from '@/stores/contacts';
   import {useSearch} from '@/composables/useSearch';
   import {useSortingList} from '@/composables/useSortingList';
+
+  const pageSize = 5;
+  const currentPage = ref(1);
 
   const contactStore = useContactsStore();
   contactStore.fetchContact();
@@ -60,6 +70,20 @@
 
   const {sortOrder, sortOptions, currentSortList} =
     useSortingList(filteredContacts);
+
+  const paginatedContacts = computed(() => {
+    const startIndex = (currentPage.value - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    return currentSortList.value.slice(startIndex, endIndex);
+  });
+
+  const totalPages = computed(() =>
+    Math.ceil(currentSortList.value.length / pageSize)
+  );
+
+  const handlePageChange = (page) => {
+    currentPage.value = page;
+  };
 </script>
 
 <style lang="scss">

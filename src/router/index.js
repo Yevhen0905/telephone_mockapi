@@ -20,12 +20,12 @@ const router = createRouter({
       name: 'edit',
       component: () => import('../views/ContactEdit.vue'),
       props: true,
-    //   beforeEnter: (_, from) => {
-    //     const contactStore = useContactsStore();
-    //     if (from.matched.length === 0) {
-    //       contactStore.fetchContact();
-    //     }
-    //   }
+      beforeEnter: (_, from) => {
+        const contactStore = useContactsStore();
+        if (from.matched.length === 0) {
+          contactStore.fetchContact();
+        }
+      }
     }
   ]
 });
