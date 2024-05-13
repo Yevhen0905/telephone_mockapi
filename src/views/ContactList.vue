@@ -1,32 +1,54 @@
 <template>
   <div class="contact_list">
     <h1 class="contact_title">Contact List</h1>
-    <div class="contact_action">
-      <div class="contact_input">
-        <label class="contact_label">Search</label>
-        <input
-          class="input"
-          type="text"
-          placeholder="search by name or telephone..."
-          v-model="search"
-        />
-      </div>
-      <div class="contact_input">
-        <label class="contact_label">Sorting</label>
-        <select class="input select" v-model="sortOrder">
-          <option
-            class="select_option"
-            v-for="option in sortOptions"
-            :key="option"
-            :value="option"
-          >
-            {{ option }}
-          </option>
-        </select>
+    <div v-if="loading" class="loader">
+      <div class="lds-ripple">
+        <div></div>
+        <div></div>
       </div>
     </div>
-    <div v-if="filteredContacts.length" class="wrapper_contact">
-      <div v-if="currentSortList.length">
+    <div v-else class="contacts_wrapper">
+      <div class="contact_action">
+        <div class="contact_input">
+          <label class="contact_label">Search</label>
+          <input
+            class="input"
+            type="text"
+            placeholder="search by name or telephone..."
+            v-model="search"
+          />
+        </div>
+        <SortingKey
+          :sort-options="sortOptions"
+          :order="sortOrder"
+          @sort-order-change="handleSortOrderChange"
+        />
+
+        <div class="contact_input contact_input_radio">
+          <div class="contact_label">Show</div>
+          <div class="wrapper_radio">
+            <label class="label_radio">
+              <input
+                class="radio"
+                type="radio"
+                value="all"
+                v-model="favoritesToggle"
+              />
+              All
+            </label>
+            <label class="label_radio">
+              <input
+                class="radio"
+                type="radio"
+                value="favorites"
+                v-model="favoritesToggle"
+              />
+              Favorites
+            </label>
+          </div>
+        </div>
+      </div>
+      <div v-if="paginatedContacts.length" class="wrapper_contact">
         <ContactCard
           v-for="contact in paginatedContacts"
           :key="contact.id"
@@ -39,25 +61,23 @@
           @pageChange="handlePageChange"
         />
       </div>
-      <div v-else class="no_contact">
-        <p class="no_contact_text">
-          No contacts. Click the Add contact button above to add one.
-        </p>
-      </div>
+      <div v-else class="no_contact">{{ noContactMessage }}</div>
     </div>
-    <div v-else class="no_contact">No contacts found</div>
   </div>
 </template>
 
 <script setup>
   import ContactCard from '../components/ContactCard.vue';
   import Pagination from '../components/Pagination.vue';
+  import SortingKey from '../components/SortingKey.vue';
 
-  import {ref, computed, watch} from 'vue';
+  import {ref, computed, onMounted} from 'vue';
   import {useContactsStore} from '@/stores/contacts';
   import {useSearch} from '@/composables/useSearch';
   import {useSortingList} from '@/composables/useSortingList';
+  import {useFavorites} from '@/composables/useFavorites';
 
+  const loading = ref(true);
   const pageSize = 5;
   const currentPage = ref(1);
 
@@ -71,19 +91,44 @@
   const {sortOrder, sortOptions, currentSortList} =
     useSortingList(filteredContacts);
 
+  const favoritesToggle = ref('all');
+  const {currentList} = useFavorites(favoritesToggle, currentSortList);
+
   const paginatedContacts = computed(() => {
     const startIndex = (currentPage.value - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    return currentSortList.value.slice(startIndex, endIndex);
+    return currentList.value.slice(startIndex, endIndex);
   });
 
   const totalPages = computed(() =>
-    Math.ceil(currentSortList.value.length / pageSize)
+    Math.ceil(currentList.value.length / pageSize)
   );
+
+  const noContactMessage = computed(() => {
+    if (paginatedContacts.value.length === 0) {
+      if (favoritesToggle.value === 'favorites') {
+        return 'No favorite contacts.';
+      } else {
+        return 'No contacts found. Click the Add contact button above to add one.';
+      }
+    } else {
+      return '';
+    }
+  });
 
   const handlePageChange = (page) => {
     currentPage.value = page;
   };
+
+  const handleSortOrderChange = (value) => {
+    sortOrder.value = value;
+  };
+
+  onMounted(() => {
+    setTimeout(() => {
+      loading.value = false;
+    }, 500);
+  });
 </script>
 
 <style lang="scss">
@@ -184,5 +229,63 @@
 
   .contact_input_radio {
     margin-left: 10px;
+  }
+
+  .loader {
+    display: flex;
+    justify-content: center;
+    margin-top: 90px;
+    color: #00a6ff;
+  }
+
+  .lds-ripple,
+  .lds-ripple div {
+    box-sizing: border-box;
+  }
+  .lds-ripple {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+  .lds-ripple div {
+    position: absolute;
+    border: 4px solid currentColor;
+    opacity: 1;
+    border-radius: 50%;
+    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+  }
+  .lds-ripple div:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  @keyframes lds-ripple {
+    0% {
+      top: 36px;
+      left: 36px;
+      width: 8px;
+      height: 8px;
+      opacity: 0;
+    }
+    4.9% {
+      top: 36px;
+      left: 36px;
+      width: 8px;
+      height: 8px;
+      opacity: 0;
+    }
+    5% {
+      top: 36px;
+      left: 36px;
+      width: 8px;
+      height: 8px;
+      opacity: 1;
+    }
+    100% {
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      opacity: 0;
+    }
   }
 </style>

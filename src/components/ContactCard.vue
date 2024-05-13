@@ -2,6 +2,7 @@
   <div class="contact_card">
     <div class="contact_card_header">
       <p class="card_header_name">{{ fullName }}</p>
+      <div v-if="contact.favorite" class="favorite_icon">&starf;</div>
     </div>
     <div class="contact_card_info">
       <div class="card_info_number">
@@ -17,6 +18,9 @@
         :to="{name: 'edit', params: {id: contact.id}}"
         >Edit</RouterLink
       >
+      <a class="card_btn btn_favorite" @click="toggleFavorite">
+        {{ favoriteText }}
+      </a>
       <div class="card_btn btn_delete" @click="deleteContact">Delete</div>
     </div>
   </div>
@@ -58,6 +62,19 @@
 
     return date + ' ' + time;
   };
+
+  const favoriteText = computed(() => {
+    return props.contact.favorite
+      ? 'Remove from Favorites'
+      : 'Mark as Favorite';
+  });
+
+  function toggleFavorite() {
+    contactStore.editContact({
+      ...props.contact,
+      favorite: props.contact.favorite ? false : true
+    });
+  }
 
   const deleteContact = () => {
     contactStore.setContactToDelete(props.contact);
