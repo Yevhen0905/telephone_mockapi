@@ -9,44 +9,9 @@
     </div>
     <div v-else class="contacts_wrapper">
       <div class="contact_action">
-        <div class="contact_input">
-          <label class="contact_label">Search</label>
-          <input
-            class="input"
-            type="text"
-            placeholder="search by name or telephone..."
-            v-model="search"
-          />
-        </div>
-        <SortingKey
-          :sort-options="sortOptions"
-          :order="sortOrder"
-          @sort-order-change="handleSortOrderChange"
-        />
-
-        <div class="contact_input contact_input_radio">
-          <div class="contact_label">Show</div>
-          <div class="wrapper_radio">
-            <label class="label_radio">
-              <input
-                class="radio"
-                type="radio"
-                value="all"
-                v-model="favoritesToggle"
-              />
-              All
-            </label>
-            <label class="label_radio">
-              <input
-                class="radio"
-                type="radio"
-                value="favorites"
-                v-model="favoritesToggle"
-              />
-              Favorites
-            </label>
-          </div>
-        </div>
+        <SearchContact v-model="search" />
+        <SortingKey :sort-options="sortOptions" v-model="sortOrder" />
+        <FavoritesFilter :list="listFavorites" v-model="favoritesToggle" />
       </div>
       <div v-if="paginatedContacts.length" class="wrapper_contact">
         <ContactCard
@@ -70,6 +35,8 @@
   import ContactCard from '../components/ContactCard.vue';
   import Pagination from '../components/Pagination.vue';
   import SortingKey from '../components/SortingKey.vue';
+  import FavoritesFilter from '../components/FavoritesFilter.vue';
+  import SearchContact from '../components/SearchContact.vue';
 
   import {ref, computed, onMounted} from 'vue';
   import {useContactsStore} from '@/stores/contacts';
@@ -80,6 +47,17 @@
   const loading = ref(true);
   const pageSize = 5;
   const currentPage = ref(1);
+  const favoritesToggle = ref('all');
+  const listFavorites = ref([
+    {
+      value: 'all',
+      text: 'All'
+    },
+    {
+      value: 'favorites',
+      text: 'Favorites'
+    }
+  ]);
 
   const contactStore = useContactsStore();
   contactStore.fetchContact();
@@ -91,7 +69,6 @@
   const {sortOrder, sortOptions, currentSortList} =
     useSortingList(filteredContacts);
 
-  const favoritesToggle = ref('all');
   const {currentList} = useFavorites(favoritesToggle, currentSortList);
 
   const paginatedContacts = computed(() => {
@@ -104,6 +81,10 @@
     Math.ceil(currentList.value.length / pageSize)
   );
 
+  const handlePageChange = (page) => {
+    currentPage.value = page;
+  };
+
   const noContactMessage = computed(() => {
     if (paginatedContacts.value.length === 0) {
       if (favoritesToggle.value === 'favorites') {
@@ -115,14 +96,6 @@
       return '';
     }
   });
-
-  const handlePageChange = (page) => {
-    currentPage.value = page;
-  };
-
-  const handleSortOrderChange = (value) => {
-    sortOrder.value = value;
-  };
 
   onMounted(() => {
     setTimeout(() => {

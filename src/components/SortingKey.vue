@@ -15,25 +15,28 @@
 </template>
 
 <script setup>
-  import {defineProps, defineEmits, ref, watch} from 'vue';
+  import {computed} from 'vue';
 
   const props = defineProps({
     sortOptions: {
       type: Array,
       required: true
     },
-    order: {
+    modelValue: {
       type: String,
       default: ''
     }
   });
 
-  const emit = defineEmits(['sort-order-change']);
+  const emit = defineEmits(['update:modelValue']);
 
-  const selectedSortOption = ref(props.order);
-
-  watch(selectedSortOption, (newValue) => {
-    emit('sort-order-change', newValue);
+  const selectedSortOption = computed({
+    get() {
+      return props.modelValue;
+    },
+    set(value) {
+      emit('update:modelValue', value);
+    }
   });
 </script>
 
