@@ -84,10 +84,11 @@
 <style lang="scss">
   .contact_card {
     background: #fff;
-    border-radius: 6px;
-    box-shadow: 0px 0px 5px 1px rgb(10 10 10 / 51%);
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 0px rgb(224 215 215 / 56%);
     margin: 10px 0px;
     width: 100%;
+    overflow: hidden;
 
     &_header {
       position: relative;

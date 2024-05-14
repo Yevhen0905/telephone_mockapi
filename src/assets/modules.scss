@@ -1,18 +1,20 @@
 .contact_title {
   color: #fff;
-  font-size: 45px;
+  font-size: 50px;
   font-weight: 500;
   line-height: 1.5;
   letter-spacing: 1.5px;
   margin-bottom: 20px;
   text-align: center;
-  text-shadow: 1px 0px 8px #230fcb;
+  color: #ebeef4;
+  text-shadow: 3px 0px 0px #6e6e75;
 }
 
 .contact_label {
   display: block;
   font-size: 19px;
   font-weight: 700;
+  color: #fff;
 }
 
 .input {
@@ -23,10 +25,11 @@
   outline: none;
   border: 1px solid rgb(154, 154, 152);
   padding: 6px 10px;
+  transition: all 0.3s ease;
 
   &:focus {
-    border-color: #5f70bd;
-    box-shadow: 0 0 0 0.125em rgba(72, 95, 199, 0.25);
+    border-color: #1b1b1d;
+    box-shadow: 0 0 0 2px #00a6ffb6;
   }
 
   &:hover {
@@ -43,10 +46,12 @@
   background: #00a6ff;
   color: #fff;
   border-radius: 5px;
-  box-shadow: 3px 1px 4px 0px #4e82d9;
+  box-shadow: 0px 2px 5px -1px #7192ca;
+  transition: all 0.3s ease;
 
   &:hover {
-    opacity: 0.6;
+    color: #00a6ff;
+    background: #ebedee;
   }
 }
 
@@ -58,4 +63,30 @@
   @media only screen and (max-width: 590px) {
     padding-bottom: 5px;
   }
+}
+
+.contact_input_radio {
+  margin-left: 10px;
+}
+
+.select {
+  padding: 7px 10px;
+}
+
+.wrapper_radio {
+  display: flex;
+  gap: 14px;
+}
+
+.label_radio {
+  display: flex;
+  font-size: 16px;
+  align-items: center;
+  gap: 3px;
+  color: #fff;
+}
+
+.radio {
+  width: 20px;
+  height: 20px;
 }

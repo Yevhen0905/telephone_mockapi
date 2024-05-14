@@ -19,11 +19,11 @@
 
   .home {
     font-size: 20px;
-    color: brown;
+    color: #00a6ff;
     font-weight: 600;
 
     &:hover {
-      text-shadow: 1px 1px 3px #bc3d3d;
+      text-shadow: 1px 1px 3px #6f7cba;
     }
   }
 </style>

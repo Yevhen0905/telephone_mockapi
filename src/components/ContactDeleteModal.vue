@@ -8,15 +8,17 @@
       </div>
       <div class="modal_body">
         <p class="modal_body_text">
-          Are you sure you want to delete <span>{{ fullName }}</span> from your contact
-          list?
+          Are you sure you want to delete <span>{{ fullName }}</span> from your
+          contact list?
         </p>
       </div>
       <div class="modal_buttons">
         <button class="modal_button modal_button_delete" @click="deleteContact">
           Yes, delete
         </button>
-        <button class="modal_button modal_button_cancel" @click="cancel">Cancel</button>
+        <button class="modal_button modal_button_cancel" @click="cancel">
+          Cancel
+        </button>
       </div>
     </div>
   </div>
@@ -38,7 +40,9 @@
 
   const fullName = computed(() => {
     if (contactToDelete.value) {
-      return contactToDelete.value.lastName + ' ' + contactToDelete.value.firstName;
+      return (
+        contactToDelete.value.lastName + ' ' + contactToDelete.value.firstName
+      );
     }
 
     return '';

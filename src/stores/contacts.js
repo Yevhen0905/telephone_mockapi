@@ -1,4 +1,5 @@
 import {defineStore} from 'pinia';
+import {useNotificationStore} from './notification';
 
 export const useContactsStore = defineStore('contact', {
   state: () => ({
@@ -47,6 +48,11 @@ export const useContactsStore = defineStore('contact', {
       } catch (error) {
         console.error('Error creating contact:', error);
       }
+      const notificationStore = useNotificationStore();
+      notificationStore.add({
+        type: 'success',
+        message: 'Your contact has been created!'
+      });
     },
     async deleteContact(contact) {
       try {
@@ -65,6 +71,12 @@ export const useContactsStore = defineStore('contact', {
       } catch (error) {
         console.error('Error deleting contact:', error);
       }
+
+      const notificationStore = useNotificationStore();
+      notificationStore.add({
+        type: 'danger',
+        message: 'Your contact has been deleted!'
+      });
     },
     async editContact(contact) {
       try {
@@ -88,6 +100,12 @@ export const useContactsStore = defineStore('contact', {
       } catch (error) {
         console.error('Error updating contact:', error);
       }
+
+      const notificationStore = useNotificationStore();
+      notificationStore.add({
+        type: 'success',
+        message: 'Your contact has been updated!'
+      });
     },
     setContactToDelete(contact) {
       this.contactToDelete = contact;

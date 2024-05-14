@@ -123,7 +123,7 @@
       today.getMinutes().toString().padStart(2, '0') +
       ':' +
       today.getSeconds().toString().padStart(2, '0');
-      
+
     return date + ' ' + time;
   };
 

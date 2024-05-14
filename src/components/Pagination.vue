@@ -136,8 +136,7 @@
 
   watch(
     () => props.totalPages,
-    (newValue, oldValue) => {
-      // Ensure current page stays within valid range after total pages change
+    (newValue) => {
       if (props.currentPage > newValue) {
         emit('pageChange', Math.min(props.currentPage, newValue));
       }
@@ -145,7 +144,7 @@
   );
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .pagination {
     display: flex;
     justify-content: center;
@@ -159,7 +158,7 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    border: 1px solid rgba(216, 216, 216, 0.75);
+    border: 1px solid rgba(216, 216, 216);
   }
 
   .active {
@@ -174,6 +173,18 @@
     border-radius: 50%;
     width: 50px;
     height: 50px;
-    border: 1px solid rgba(216, 216, 216, 0.75);
+    border: 1px solid rgb(108, 106, 106);
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  .dots {
+    color: #fff;
   }
 </style>

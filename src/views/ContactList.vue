@@ -1,12 +1,7 @@
 <template>
   <div class="contact_list">
     <h1 class="contact_title">Contact List</h1>
-    <div v-if="loading" class="loader">
-      <div class="lds-ripple">
-        <div></div>
-        <div></div>
-      </div>
-    </div>
+    <Loader v-if="loading" />
     <div v-else class="contacts_wrapper">
       <div class="contact_action">
         <SearchContact v-model="search" />
@@ -26,23 +21,24 @@
           @pageChange="handlePageChange"
         />
       </div>
-      <div v-else class="no_contact">{{ noContactMessage }}</div>
+      <div v-else class="no_contact_text">{{ noContactMessage }}</div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import ContactCard from '../components/ContactCard.vue';
+  import Loader from '../components/Loader.vue';
   import Pagination from '../components/Pagination.vue';
   import SortingKey from '../components/SortingKey.vue';
-  import FavoritesFilter from '../components/FavoritesFilter.vue';
+  import ContactCard from '../components/ContactCard.vue';
   import SearchContact from '../components/SearchContact.vue';
+  import FavoritesFilter from '../components/FavoritesFilter.vue';
 
   import {ref, computed, onMounted} from 'vue';
   import {useContactsStore} from '@/stores/contacts';
   import {useSearch} from '@/composables/useSearch';
-  import {useSortingList} from '@/composables/useSortingList';
   import {useFavorites} from '@/composables/useFavorites';
+  import {useSortingList} from '@/composables/useSortingList';
 
   const loading = ref(true);
   const pageSize = 5;
@@ -118,147 +114,13 @@
     }
   }
 
-  .select {
-    padding: 7px 10px;
-  }
-
-  .wrapper_radio {
-    display: flex;
-    gap: 14px;
-  }
-
-  .label_radio {
-    display: flex;
-    font-size: 16px;
-    align-items: center;
-    gap: 3px;
-  }
-
-  .radio {
-    width: 20px;
-    height: 20px;
-  }
-
-  .no_contact {
-    text-align: center;
-    padding-top: 50px;
-    font-size: 27px;
-  }
-
-  .bg_img_list {
-    background-image: url('../assets/img/book-159880_1280.webp');
-    background-size: cover;
-    background-position: left top;
-    background-repeat: no-repeat;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    &::before {
-      content: '';
-      backdrop-filter: blur(10px);
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-  }
-
-  .bg_img {
-    background-image: url('../assets/img/black-iphone-5-3.jpg');
-    background-size: cover;
-    background-position: left top;
-    background-repeat: no-repeat;
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
-    &::before {
-      content: '';
-      backdrop-filter: blur(6px);
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-    }
-  }
-
   .no_contact_text {
     font-size: 35px;
     background: linear-gradient(45deg, #0720a1, #201b20 27%, #50390f);
     color: #ebeef4;
     -webkit-background-clip: text;
     -webkit-text-stroke: 3px transparent;
-    text-shadow: 4px 1px 2px #230fcb;
-  }
-
-  .contact_input_radio {
-    margin-left: 10px;
-  }
-
-  .loader {
-    display: flex;
-    justify-content: center;
-    margin-top: 90px;
-    color: #00a6ff;
-  }
-
-  .lds-ripple,
-  .lds-ripple div {
-    box-sizing: border-box;
-  }
-  .lds-ripple {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 80px;
-  }
-  .lds-ripple div {
-    position: absolute;
-    border: 4px solid currentColor;
-    opacity: 1;
-    border-radius: 50%;
-    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-  }
-  .lds-ripple div:nth-child(2) {
-    animation-delay: -0.5s;
-  }
-  @keyframes lds-ripple {
-    0% {
-      top: 36px;
-      left: 36px;
-      width: 8px;
-      height: 8px;
-      opacity: 0;
-    }
-    4.9% {
-      top: 36px;
-      left: 36px;
-      width: 8px;
-      height: 8px;
-      opacity: 0;
-    }
-    5% {
-      top: 36px;
-      left: 36px;
-      width: 8px;
-      height: 8px;
-      opacity: 1;
-    }
-    100% {
-      top: 0;
-      left: 0;
-      width: 80px;
-      height: 80px;
-      opacity: 0;
-    }
+    text-align: center;
+    margin-top: 50px;
   }
 </style>
