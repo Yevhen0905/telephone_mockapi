@@ -162,8 +162,8 @@
   }
 
   .active {
-    background-color: rgb(69, 96, 199);
-    border: 1px solid rgb(69, 96, 199);
+    background-color: #00a6ff;
+    border: 1px solid #00a6ff;
     color: #fff;
   }
 
