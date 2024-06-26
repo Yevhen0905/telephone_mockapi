@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-  import {ref, computed, watch} from 'vue';
+  import {watch} from 'vue';
   const props = defineProps({
     currentPage: {
       type: Number,
