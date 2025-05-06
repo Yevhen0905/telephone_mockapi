@@ -40,7 +40,7 @@
   const contactStore = useContactsStore();
 
   const fullName = computed(() => {
-    return props.contact.lastName + ' ' + props.contact.firstName;
+    return props.contact.firstName + ' ' + props.contact.lastName;
   });
 
   const getDateTime = (dateString) => {
