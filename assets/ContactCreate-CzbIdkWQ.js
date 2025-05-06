@@ -1,0 +1,1 @@
+import{_ as t}from"./ContactForm-DLf201_A.js";import{c as e,a,b as c,o}from"./index-BdF8PO5t.js";const s={class:"contact_create"},_=c("h3",{class:"contact_title"},"Add contact",-1),l={__name:"ContactCreate",setup(r){return(n,d)=>(o(),e("div",s,[_,a(t)]))}};export{l as default};
