@@ -1,82 +1,74 @@
-import {defineStore} from 'pinia';
-import {useNotificationStore} from './notification';
+import { defineStore } from 'pinia'
+import { useNotificationStore } from './notification'
 
 export const useContactsStore = defineStore('contact', {
   state: () => ({
     contacts: [],
-    contactToDelete: null
+    contactToDelete: null,
   }),
 
   getters: {
     getContactById: (state) => {
-      return (id) =>
-        state.contacts.find((contact) => parseInt(contact.id) === id);
+      return (id) => state.contacts.find((contact) => parseInt(contact.id) === id)
     },
     getContactByPhone: (state) => {
-      return (phoneNumber) =>
-        state.contacts.find((contact) => contact.phoneNumber === phoneNumber);
-    }
+      return (phoneNumber) => state.contacts.find((contact) => contact.phoneNumber === phoneNumber)
+    },
   },
 
   actions: {
     async fetchContact() {
       try {
-        const res = await fetch(
-          'https://6634f1519bb0df2359a34ac7.mockapi.io/api/contacts/'
-        );
-        const data = await res.json();
-        this.contacts = data;
-        console.log(this.contacts);
+        const res = await fetch('https://6634f1519bb0df2359a34ac7.mockapi.io/api/contacts/')
+        const data = await res.json()
+        this.contacts = data
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     },
     async createContact(newContact) {
       try {
-        const res = await fetch(
-          'https://6634f1519bb0df2359a34ac7.mockapi.io/api/contacts/',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newContact)
-          }
-        );
-        const data = await res.json();
-        this.contacts.push(data);
+        const res = await fetch('https://6634f1519bb0df2359a34ac7.mockapi.io/api/contacts/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newContact),
+        })
+        const data = await res.json()
+        this.contacts.push(data)
       } catch (error) {
-        console.error('Error creating contact:', error);
+        console.error('Error creating contact:', error)
       }
-      const notificationStore = useNotificationStore();
+      const notificationStore = useNotificationStore()
       notificationStore.add({
         type: 'success',
-        message: 'Your contact has been created!'
-      });
+        message: 'Your contact has been created!',
+      })
     },
     async deleteContact(contact) {
       try {
         const res = await fetch(
           `https://6634f1519bb0df2359a34ac7.mockapi.io/api/contacts/${contact.id}`,
           {
-            method: 'DELETE'
+            method: 'DELETE',
           }
-        );
+        )
         if (res.ok) {
-          this.contacts = this.contacts.filter((c) => c.id !== contact.id);
-          this.contactToDelete = null;
+          this.contacts = this.contacts.filter((c) => c.id !== contact.id)
+          this.contactToDelete = null
         } else {
-          throw new Error('Failed to delete contact');
+          throw new Error('Failed to delete contact')
         }
       } catch (error) {
-        console.error('Error deleting contact:', error);
+        console.error('Error deleting contact:', error)
       }
 
-      const notificationStore = useNotificationStore();
+      const notificationStore = useNotificationStore()
       notificationStore.add({
         type: 'danger',
-        message: 'Your contact has been deleted!'
-      });
+        message: 'Your contact has been deleted!',
+      })
     },
     async editContact(contact) {
       try {
@@ -85,30 +77,30 @@ export const useContactsStore = defineStore('contact', {
           {
             method: 'PUT',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify(contact)
+            body: JSON.stringify(contact),
           }
-        );
+        )
         if (res.ok) {
-          const updatedContact = await res.json();
-          const index = this.contacts.findIndex((c) => c.id === contact.id);
-          this.contacts.splice(index, 1, updatedContact);
+          const updatedContact = await res.json()
+          const index = this.contacts.findIndex((c) => c.id === contact.id)
+          this.contacts.splice(index, 1, updatedContact)
         } else {
-          throw new Error('Failed to update contact');
+          throw new Error('Failed to update contact')
         }
       } catch (error) {
-        console.error('Error updating contact:', error);
+        console.error('Error updating contact:', error)
       }
 
-      const notificationStore = useNotificationStore();
+      const notificationStore = useNotificationStore()
       notificationStore.add({
         type: 'success',
-        message: 'Your contact has been updated!'
-      });
+        message: 'Your contact has been updated!',
+      })
     },
     setContactToDelete(contact) {
-      this.contactToDelete = contact;
-    }
-  }
-});
+      this.contactToDelete = contact
+    },
+  },
+})

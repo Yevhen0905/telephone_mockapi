@@ -1,14 +1,12 @@
 <template>
   <div class="pagination">
-    <button class="btn_prev" @click="prevPage" :disabled="currentPage === 1">
-      <
-    </button>
+    <button class="btn_prev" @click="prevPage" :disabled="currentPage === 1"><</button>
     <template v-if="totalPages <= 6">
       <button
         v-for="page in totalPages"
         :key="page"
         @click="changePage(page)"
-        :class="['page_btn', {active: page === currentPage}]"
+        :class="['page_btn', { active: page === currentPage }]"
       >
         {{ page }}
       </button>
@@ -16,10 +14,7 @@
     <template v-else>
       <template v-if="currentPage <= 3">
         <template v-for="n in Math.min(3, totalPages)" :key="n">
-          <button
-            @click="changePage(n)"
-            :class="['page_btn', {active: n === currentPage}]"
-          >
+          <button @click="changePage(n)" :class="['page_btn', { active: n === currentPage }]">
             {{ n }}
           </button>
         </template>
@@ -27,7 +22,7 @@
         <button
           :key="totalPages"
           @click="changePage(totalPages)"
-          :class="['page_btn', {active: totalPages === currentPage}]"
+          :class="['page_btn', { active: totalPages === currentPage }]"
         >
           {{ totalPages }}
         </button>
@@ -36,18 +31,15 @@
         <button
           :key="1"
           @click="changePage(1)"
-          :class="['page_btn', {active: 1 === currentPage}]"
+          :class="['page_btn', { active: 1 === currentPage }]"
         >
           {{ 1 }}
         </button>
         <span class="dots">...</span>
-        <template
-          v-for="n in Math.min(3, totalPages)"
-          :key="totalPages - 3 + n"
-        >
+        <template v-for="n in Math.min(3, totalPages)" :key="totalPages - 3 + n">
           <button
             @click="changePage(totalPages - 3 + n)"
-            :class="['page_btn', {active: totalPages - 3 + n === currentPage}]"
+            :class="['page_btn', { active: totalPages - 3 + n === currentPage }]"
           >
             {{ totalPages - 3 + n }}
           </button>
@@ -57,7 +49,7 @@
         <button
           :key="1"
           @click="changePage(1)"
-          :class="['page_btn', {active: 1 === currentPage}]"
+          :class="['page_btn', { active: 1 === currentPage }]"
         >
           {{ 1 }}
         </button>
@@ -65,21 +57,21 @@
         <button
           :key="currentPage - 1"
           @click="changePage(currentPage - 1)"
-          :class="['page_btn', {active: currentPage - 1 === currentPage}]"
+          :class="['page_btn', { active: currentPage - 1 === currentPage }]"
         >
           {{ currentPage - 1 }}
         </button>
         <button
           :key="currentPage"
           @click="changePage(currentPage)"
-          :class="['page_btn', {active: currentPage === currentPage}]"
+          :class="['page_btn', { active: currentPage === currentPage }]"
         >
           {{ currentPage }}
         </button>
         <button
           :key="currentPage + 1"
           @click="changePage(currentPage + 1)"
-          :class="['page_btn', {active: currentPage + 1 === currentPage}]"
+          :class="['page_btn', { active: currentPage + 1 === currentPage }]"
         >
           {{ currentPage + 1 }}
         </button>
@@ -87,61 +79,55 @@
         <button
           :key="totalPages"
           @click="changePage(totalPages)"
-          :class="['page_btn', {active: totalPages === currentPage}]"
+          :class="['page_btn', { active: totalPages === currentPage }]"
         >
           {{ totalPages }}
         </button>
       </template>
     </template>
-    <button
-      class="btn_next"
-      @click="nextPage"
-      :disabled="currentPage === totalPages"
-    >
-      >
-    </button>
+    <button class="btn_next" @click="nextPage" :disabled="currentPage === totalPages">></button>
   </div>
 </template>
 
 <script setup>
-  import {watch} from 'vue';
+  import { watch } from 'vue'
   const props = defineProps({
     currentPage: {
       type: Number,
-      required: true
+      required: true,
     },
     totalPages: {
       type: Number,
-      required: true
-    }
-  });
+      required: true,
+    },
+  })
 
-  const emit = defineEmits(['pageChange']);
+  const emit = defineEmits(['pageChange'])
 
   const changePage = (page) => {
-    emit('pageChange', page);
-  };
+    emit('pageChange', page)
+  }
 
   const prevPage = () => {
     if (props.currentPage > 1) {
-      emit('pageChange', props.currentPage - 1);
+      emit('pageChange', props.currentPage - 1)
     }
-  };
+  }
 
   const nextPage = () => {
     if (props.currentPage < props.totalPages) {
-      emit('pageChange', props.currentPage + 1);
+      emit('pageChange', props.currentPage + 1)
     }
-  };
+  }
 
   watch(
     () => props.totalPages,
     (newValue) => {
       if (props.currentPage > newValue) {
-        emit('pageChange', Math.min(props.currentPage, newValue));
+        emit('pageChange', Math.min(props.currentPage, newValue))
       }
     }
-  );
+  )
 </script>
 
 <style lang="scss" scoped>

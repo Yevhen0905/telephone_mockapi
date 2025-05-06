@@ -9,11 +9,7 @@
         <FavoritesFilter :list="listFavorites" v-model="favoritesToggle" />
       </div>
       <div v-if="paginatedContacts.length" class="wrapper_contact">
-        <ContactCard
-          v-for="contact in paginatedContacts"
-          :key="contact.id"
-          :contact="contact"
-        />
+        <ContactCard v-for="contact in paginatedContacts" :key="contact.id" :contact="contact" />
         <Pagination
           v-show="totalPages > 1"
           :totalPages="totalPages"
@@ -27,77 +23,74 @@
 </template>
 
 <script setup>
-  import Loader from '../components/Loader.vue';
-  import Pagination from '../components/Pagination.vue';
-  import SortingKey from '../components/SortingKey.vue';
-  import ContactCard from '../components/ContactCard.vue';
-  import SearchContact from '../components/SearchContact.vue';
-  import FavoritesFilter from '../components/FavoritesFilter.vue';
+  import Loader from '../components/Loader.vue'
+  import Pagination from '../components/Pagination.vue'
+  import SortingKey from '../components/SortingKey.vue'
+  import ContactCard from '../components/ContactCard.vue'
+  import SearchContact from '../components/SearchContact.vue'
+  import FavoritesFilter from '../components/FavoritesFilter.vue'
 
-  import {ref, computed, onMounted} from 'vue';
-  import {useContactsStore} from '@/stores/contacts';
-  import {useSearch} from '@/composables/useSearch';
-  import {useFavorites} from '@/composables/useFavorites';
-  import {useSortingList} from '@/composables/useSortingList';
+  import { ref, computed, onMounted } from 'vue'
+  import { useContactsStore } from '@/stores/contacts'
+  import { useSearch } from '@/composables/useSearch'
+  import { useFavorites } from '@/composables/useFavorites'
+  import { useSortingList } from '@/composables/useSortingList'
 
-  const loading = ref(true);
-  const pageSize = 5;
-  const currentPage = ref(1);
-  const favoritesToggle = ref('all');
+  const loading = ref(true)
+  const pageSize = 5
+  const currentPage = ref(1)
+  const favoritesToggle = ref('all')
   const listFavorites = ref([
     {
       value: 'all',
-      text: 'All'
+      text: 'All',
     },
     {
       value: 'favorites',
-      text: 'Favorites'
-    }
-  ]);
+      text: 'Favorites',
+    },
+  ])
 
-  const contactStore = useContactsStore();
-  contactStore.fetchContact();
+  const contactStore = useContactsStore()
+  contactStore.fetchContact()
 
-  const contacts = computed(() => contactStore.contacts);
+  const contacts = computed(() => contactStore.contacts)
 
-  const {search, filteredContacts} = useSearch(contacts);
+  const { search, filteredContacts } = useSearch(contacts)
 
-  const {sortOrder, sortOptions, currentSortList} =
-    useSortingList(filteredContacts);
+  const { sortOrder, sortOptions, currentSortList } = useSortingList(filteredContacts)
 
-  const {currentList} = useFavorites(favoritesToggle, currentSortList);
+  const { currentList } = useFavorites(favoritesToggle, currentSortList)
 
   const paginatedContacts = computed(() => {
-    const startIndex = (currentPage.value - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
-    return currentList.value.slice(startIndex, endIndex);
-  });
+    const startIndex = (currentPage.value - 1) * pageSize
+    const endIndex = startIndex + pageSize
+    return currentList.value.slice(startIndex, endIndex)
+  })
 
-  const totalPages = computed(() =>
-    Math.ceil(currentList.value.length / pageSize)
-  );
+  const totalPages = computed(() => Math.ceil(currentList.value.length / pageSize))
 
   const handlePageChange = (page) => {
-    currentPage.value = page;
-  };
+    currentPage.value = page
+  }
 
   const noContactMessage = computed(() => {
     if (paginatedContacts.value.length === 0) {
       if (favoritesToggle.value === 'favorites') {
-        return 'No favorite contacts.';
+        return 'No favorite contacts.'
       } else {
-        return 'No contacts found. Click the Add contact button above to add one.';
+        return 'No contacts found. Click the Add contact button above to add one.'
       }
     } else {
-      return '';
+      return ''
     }
-  });
+  })
 
   onMounted(() => {
     setTimeout(() => {
-      loading.value = false;
-    }, 500);
-  });
+      loading.value = false
+    }, 500)
+  })
 </script>
 
 <style lang="scss">
